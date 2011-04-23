@@ -2,6 +2,8 @@ module TestXml
   module NokogiriExt
     module Node
       def match?(element, compare_value = false)
+        return equal?(element) if compare_value
+        
         if compare_value && element.leaf?
           compare_with(element) and equal_text?(element) 
         else
@@ -18,6 +20,19 @@ module TestXml
           end
         end
       end
+      
+      def equal?(element)
+        if leaf?
+          compare_with(element) and equal_text?(element) 
+        else
+          compare_with(element) &&
+          children.each_with_index do |child, i| 
+            compared = element.children[i] or return
+            child.equal?(compared) or return
+          end
+        end
+      end
+      
       
       # Compares tag and and attributes with +node+.
       def compare_with(node)

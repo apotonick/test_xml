@@ -113,6 +113,42 @@ class TestAssertions < Test::Unit::TestCase
     assert_xml_equal expected, actual
   end
   
+  def test_assert_xml_equal_on_root
+    expected = <<-XML
+      <leaf>
+        <one>1</one>
+        <two>2</two>
+      </leaf>
+    XML
+    
+    actual = <<-XML
+      <root>
+        <one>1</one>
+        <two>2</two>
+      </root>
+    XML
+    
+    assert_not_xml_equal expected, actual       # root matching
+    assert_not_xml_equal "<leaf/>", "<root/>"   # leaf matching
+  end
+  
+  def test_assert_xml_equal_with_doubles
+    expected = <<-XML
+      <root>
+        <one>1</one>
+        <one>1</one>
+      </root>
+    XML
+    
+    actual = <<-XML
+      <root>
+        <one>1</one>
+      </root>
+    XML
+    
+    assert_not_xml_equal expected, actual
+  end
+  
   def test_assert_xml_equal_with_attributes
     expected = <<-XML
       <root>
