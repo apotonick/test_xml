@@ -13,6 +13,15 @@ class TestNode < Test::Unit::TestCase
     assert !root("<div><a/></div>").leaf?
   end
   
+  def test_compare_with?
+    assert root("<a/>").compare_with(root("<a/>"))
+    assert root(%{<a rel="self"/>}).compare_with(root(%{<a rel="self"/>}))
+    
+    assert_not root("<a/>").compare_with(root("<div/>"))
+    assert_not root(%{<a rel="self"/>}).compare_with(root(%{<a rel="next"/>}))
+  end
+  
+  
 
   def test_match_of_elements_without_comparing_values
     subject = root(<<-XML)

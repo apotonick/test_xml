@@ -3,20 +3,27 @@ module TestXml
     module Node
       def match?(element, compare_value = false)
         if compare_value && element.leaf?
-          comparable_attributes == element.comparable_attributes and equal_text?(element)
+          compare_with(element) and equal_text?(element) 
         else
-
+          # non-leaf nodes:
           #TODO clean this part of the code
           if compare_value
-            (comparable_attributes == element.comparable_attributes) &&
+            compare_with(element) &&
             contains_elements_of?(element) &&
             element.elements.all? {|el| matches_at_least_one?(el, compare_value) }
-          else
+            
+          else  # FIXME: not sure what happens here:
             contains_elements_of?(element) &&
             element.elements.all? {|el| matches_at_least_one?(el, compare_value) }
           end
         end
       end
+      
+      # Compares tag and and attributes with +node+.
+      def compare_with(node)
+        comparable_attributes == node.comparable_attributes and name == node.name
+      end
+      
       
       def elements
         children.collect {|node| node if node.element? }.delete_if {|node| node.nil?}
