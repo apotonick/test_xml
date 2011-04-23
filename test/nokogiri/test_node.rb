@@ -21,6 +21,12 @@ class TestNode < Test::Unit::TestCase
     assert_not root(%{<a rel="self"/>}).compare_with(root(%{<a rel="next"/>}))
   end
   
+  def test_equal?
+    assert root("<div><a/></div>").equal?(root("<div>
+      <a/></div>"))
+  end
+  
+  
   
 
   def test_match_of_elements_without_comparing_values
@@ -108,14 +114,20 @@ class TestNode < Test::Unit::TestCase
   end
   
   def test_comparable_attributes
-    assert_equal [["id", "boss"], ["name", "Dude"]], create_element(%{<li name="Dude" id="boss" />}).comparable_attributes
+    assert_equal [["id", "boss"], ["name", "Dude"]], root(%{<li name="Dude" id="boss" />}).comparable_attributes
     
-    assert_equal [["name", "Dude"]], create_element(%{<li NAME="Dude"/>}).comparable_attributes
+    assert_equal [["name", "Dude"]], root(%{<li NAME="Dude"/>}).comparable_attributes
+  end
+  
+  def test_comparable_children
+    assert_equal ["li"], root(%{<ul>
+    
+          <li/></ul>}).comparable_children.collect { |n| n.name }
   end
   
 
   private
-
+  
   def create_element(xml)
     Nokogiri::XML::Document.parse(xml).root
   end

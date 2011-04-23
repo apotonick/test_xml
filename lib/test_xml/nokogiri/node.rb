@@ -26,8 +26,8 @@ module TestXml
           compare_with(element) and equal_text?(element) 
         else
           compare_with(element) &&
-          children.each_with_index do |child, i| 
-            compared = element.children[i] or return
+          comparable_children.each_with_index do |child, i| 
+            compared = element.comparable_children[i] or return
             child.equal?(compared) or return
           end
         end
@@ -39,6 +39,9 @@ module TestXml
         comparable_attributes == node.comparable_attributes and name == node.name
       end
       
+      def comparable_children
+        children.find_all {|node| node and node.element? }
+      end
       
       def elements
         children.collect {|node| node if node.element? }.delete_if {|node| node.nil?}

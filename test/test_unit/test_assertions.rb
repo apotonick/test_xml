@@ -111,6 +111,8 @@ class TestAssertions < Test::Unit::TestCase
     XML
     
     assert_xml_equal expected, actual
+    assert_xml_equal "<rap><id>2</id></rap>", "<rap>
+      <id>2</id></rap>"
   end
   
   def test_assert_xml_equal_on_root
